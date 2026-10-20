@@ -9,45 +9,45 @@ export class RoomTypeService {
   private pool = () => this.db.getPool();
 
   async createRoomType(
-  room_type_id: string,
- type_name: string,
-  description: string,
-  capacity: number,
-  nightly_rate: string,
-  room_type_status: string,
-  staff_status:string,
-) {
-  const [result] = await this.pool().execute<OkPacket>(
-    `INSERT INTO room_types
-    (room_type_id, 
-    type_name, 
-    description, 
-    capacity, 
-    nightly_rate, 
-    room_type_status, 
-    staff_status)
-    VALUES (?, ?, ?, ?, ?, ?, ?)`,
-    [
-      room_type_id,
+    type_name: string,
+    description: string,
+    capacity: number,
+    nightly_rate: string,
+    room_type_status: string,
+    staff_status: string,
+  ) {
+    const [result] = await this.pool().execute<OkPacket>(
+      `INSERT INTO room_type
+      (
+        type_name,
+        description,
+        capacity,
+        nightly_rate,
+        room_type_status,
+        staff_status
+      )
+      VALUES (?, ?, ?, ?, ?, ?)`,
+      [
+        type_name,
+        description,
+        capacity,
+        nightly_rate,
+        room_type_status,
+        staff_status,
+      ],
+    );
+
+    return {
+      room_type_id: result.insertId,
       type_name,
       description,
       capacity,
       nightly_rate,
       room_type_status,
       staff_status,
-    ],
-  );
+    };
+  }
 
-  return {
-    room_type_id: result.insertId,
-    type_name,
-    description,
-    capacity,
-    nightly_rate,
-    room_type_status,
-    staff_status,
-  };
-}
   async findById(id: number) {
     const [rows] = await this.pool().execute<RowDataPacket[]>(
       `SELECT
@@ -58,7 +58,7 @@ export class RoomTypeService {
         nightly_rate,
         room_type_status,
         staff_status
-       FROM room_types
+       FROM room_type
        WHERE room_type_id = ?`,
       [id],
     );
@@ -80,7 +80,7 @@ export class RoomTypeService {
         nightly_rate,
         room_type_status,
         staff_status
-       FROM room_types`,
+       FROM room_type`,
     );
 
     return rows;
@@ -131,10 +131,12 @@ export class RoomTypeService {
     }
 
     const sql = `
-      UPDATE room_types
+      UPDATE room_type
       SET ${fields.join(', ')}
       WHERE room_type_id = ?
     `;
+
+    values.push(id);
 
     await this.pool().execute(sql, values);
 
@@ -143,7 +145,7 @@ export class RoomTypeService {
 
   async deleteRoomType(id: number) {
     const [result] = await this.pool().execute<OkPacket>(
-      'DELETE FROM room_types WHERE room_type_id = ?',
+      'DELETE FROM room_type WHERE room_type_id = ?',
       [id],
     );
 

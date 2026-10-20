@@ -32,7 +32,6 @@ export class RoomTypeController {
   async create(@Body() body: any) {
     return this.roomTypeService.createRoomType(
       body.type_name,
-      body.room_type_id,
       body.description,
       body.capacity,
       body.nightly_rate,
@@ -42,7 +41,7 @@ export class RoomTypeController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post(':id')
+  @Put(':id')
   async addGuest(
     @Param('id') id: string,
     @Body() body: any,
