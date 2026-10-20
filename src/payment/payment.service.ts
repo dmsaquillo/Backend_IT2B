@@ -8,23 +8,25 @@ export class PaymentService {
 
   private pool = () => this.db.getPool();
 
-  async createPayment(
-  payment_id: string,
+async createPayment(
   reservation_id: string,
-  payment_date: number,
   amount: number,
   payment_method: string,
   payment_status: string,
   reference_number: string,
 ) {
   const [result] = await this.pool().execute<OkPacket>(
-    `INSERT INTO payments
-    (payment_id, reservation_id, payment_date, amount, payment_method, payment_status, reference_number)
-    VALUES (?, ?, ?, ?, ?, ?, ?)`,
-    [
-      payment_id,
+    `INSERT INTO payment
+    (
       reservation_id,
-      payment_date,
+      amount,
+      payment_method,
+      payment_status,
+      reference_number
+    )
+    VALUES (?, ?, ?, ?, ?)`,
+    [
+      reservation_id,
       amount,
       payment_method,
       payment_status,
@@ -35,7 +37,6 @@ export class PaymentService {
   return {
     payment_id: result.insertId,
     reservation_id,
-    payment_date,
     amount,
     payment_method,
     payment_status,

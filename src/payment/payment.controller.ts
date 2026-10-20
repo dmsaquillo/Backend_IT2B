@@ -29,16 +29,15 @@ export class PaymentsController {
   }
 
   @Post()
-  async create(@Body() body: any) {
-    return this.paymentService.createPayment(
-      body.payment_id,
-      body.reservation_id,
-      body.payment_date,
-      body.amount,
-      body.payment_method,
-      body.payment_status,
-      body.reference_number,
-    );
+async create(@Body() body: any) {
+  return this.paymentService.createPayment(
+    body.reservation_id,
+    body.amount,
+    body.payment_method,
+    body.payment_status,
+    body.reference_number,
+  );
+
   }
 
   @UseGuards(JwtAuthGuard)
