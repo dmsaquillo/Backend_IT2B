@@ -31,7 +31,6 @@ export class StaffController {
   @Post()
   async create(@Body() body: any) {
     return this.staffService.createStaff(
-      body.staff_id,
       body.first_name,
       body.last_name,
       body.email,
