@@ -8,41 +8,36 @@ export class PaymentService {
 
   private pool = () => this.db.getPool();
 
-async createPayment(
-  reservation_id: string,
-  amount: number,
-  payment_method: string,
-  payment_status: string,
-  reference_number: string,
-) {
-  const [result] = await this.pool().execute<OkPacket>(
-    `INSERT INTO payment
-    (
-      reservation_id,
-      amount,
-      payment_method,
-      payment_status,
-      reference_number
-    )
-    VALUES (?, ?, ?, ?, ?)`,
-    [
+  async createPayment(
+    reservation_id: string,
+    amount: number,
+    payment_method: string,
+    payment_status: string,
+    reference_number: string,
+  ) {
+    const [result] = await this.pool().execute<OkPacket>(
+      `INSERT INTO payment
+      (reservation_id, amount, payment_method, payment_status, reference_number)
+      VALUES (?, ?, ?, ?, ?)`,
+      [
+        reservation_id,
+        amount,
+        payment_method,
+        payment_status,
+        reference_number,
+      ],
+    );
+
+    return {
+      payment_id: result.insertId,
       reservation_id,
       amount,
       payment_method,
       payment_status,
       reference_number,
-    ],
-  );
+    };
+  }
 
-  return {
-    payment_id: result.insertId,
-    reservation_id,
-    amount,
-    payment_method,
-    payment_status,
-    reference_number,
-  };
-}
   async findBypayment_Id(id: number) {
     const [rows] = await this.pool().execute<RowDataPacket[]>(
       `SELECT
@@ -53,7 +48,7 @@ async createPayment(
         payment_method,
         payment_status,
         reference_number
-       FROM payments
+       FROM payment
        WHERE payment_id = ?`,
       [id],
     );
@@ -75,7 +70,7 @@ async createPayment(
         payment_method,
         payment_status,
         reference_number
-       FROM payments`,
+       FROM payment`,
     );
 
     return rows;
@@ -131,7 +126,7 @@ async createPayment(
 
     values.push(id);
 
-    const sql = `UPDATE payments SET ${fields.join(', ')} WHERE payment_id = ?`;
+    const sql = `UPDATE payment SET ${fields.join(', ')} WHERE payment_id = ?`;
 
     await this.pool().execute(sql, values);
 
@@ -140,7 +135,7 @@ async createPayment(
 
   async deletePayment(payment_id: number) {
     const [result] = await this.pool().execute<OkPacket>(
-      'DELETE FROM payments WHERE payment_id = ?',
+      'DELETE FROM payment WHERE payment_id = ?',
       [payment_id],
     );
 
