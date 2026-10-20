@@ -8,24 +8,23 @@ export class StaffService {
 
   private pool = () => this.db.getPool();
 
-  async createStaff(
+async createStaff(
   first_name: string,
   last_name: string,
   email: string,
-  phone: number,
+  phone: string,
   position: string,
   staff_status: string,
 ) {
   const [result] = await this.pool().execute<OkPacket>(
     `INSERT INTO staff
-    (staff_id, 
-    first_name, 
+    (first_name, 
     last_name, 
     email, 
     phone, 
     position, 
     staff_status)
-    VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    VALUES (?, ?, ?, ?, ?, ?)`,
     [
       first_name,
       last_name,
@@ -90,7 +89,7 @@ export class StaffService {
       first_name?: string;
       last_name?: string;
       email?: string;
-      phone?: number;
+      phone?: string;
       position?: string;
       staff_status?: string;
     },
