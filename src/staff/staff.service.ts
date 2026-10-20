@@ -9,7 +9,6 @@ export class StaffService {
   private pool = () => this.db.getPool();
 
   async createStaff(
-  staff_id: string,
   first_name: string,
   last_name: string,
   email: string,
@@ -28,7 +27,6 @@ export class StaffService {
     staff_status)
     VALUES (?, ?, ?, ?, ?, ?, ?)`,
     [
-      staff_id,
       first_name,
       last_name,
       email,
