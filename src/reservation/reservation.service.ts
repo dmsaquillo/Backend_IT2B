@@ -415,11 +415,11 @@ export class ReservationService {
          rt.type_name,
          rr.assigned_rate,
          (
-           SELECT p.payment_status
-           FROM payments p
-           WHERE p.reservation_id = r.reservation_id
-           ORDER BY p.payment_id DESC
-           LIMIT 1
+          SELECT p.payment_status
+          FROM payment p
+          WHERE p.reservation_id = r.reservation_id
+          ORDER BY p.payment_id DESC
+          LIMIT 1
          ) AS payment_status
        FROM reservation r
        LEFT JOIN reservation_room rr
