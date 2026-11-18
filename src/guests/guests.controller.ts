@@ -36,8 +36,8 @@ export class GuestsController {
       body.last_name,
       body.email,
       body.phone,
-      body.address,
-      body.identification_number,
+      body.address ?? null,
+      body.identification_number ?? null,
     );
   }
 

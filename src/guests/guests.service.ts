@@ -14,8 +14,8 @@ export class GuestsService {
     last_name: string,
     email: string,
     phone: string,
-    address: string,
-    identification_number: string,
+    address: string | null,
+    identification_number: string | null,
   ) {
     const [result] = await this.pool().execute<OkPacket>(
       `INSERT INTO guests
@@ -26,8 +26,8 @@ export class GuestsService {
         last_name,
         email,
         phone,
-        address,
-        identification_number,
+        address ?? null,
+        identification_number ?? null,
       ],
     );
 
@@ -37,8 +37,8 @@ export class GuestsService {
       last_name,
       email,
       phone,
-      address,
-      identification_number,
+      address: address ?? null,
+      identification_number: identification_number ?? null,
     };
   }
 
@@ -87,8 +87,8 @@ export class GuestsService {
       last_name?: string;
       email?: string;
       phone?: string;
-      address?: string;
-      identification_number?: string;
+      address?: string | null;
+      identification_number?: string | null;
     },
   ) {
     const fields: string[] = [];
