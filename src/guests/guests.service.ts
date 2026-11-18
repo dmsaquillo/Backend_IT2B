@@ -1,3 +1,4 @@
+
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
 import { RowDataPacket, OkPacket } from 'mysql2';
@@ -9,37 +10,38 @@ export class GuestsService {
   private pool = () => this.db.getPool();
 
   async createGuest(
-  first_name: string,
-  last_name: string,
-  email: string,
-  phone: number,
-  address: string,
-  identification_number: string,
-) {
-  const [result] = await this.pool().execute<OkPacket>(
-    `INSERT INTO guests
-    (first_name, last_name, email, phone, address, identification_number)
-    VALUES (?, ?, ?, ?, ?, ?)`,
-    [
+    first_name: string,
+    last_name: string,
+    email: string,
+    phone: string,
+    address: string,
+    identification_number: string,
+  ) {
+    const [result] = await this.pool().execute<OkPacket>(
+      `INSERT INTO guests
+      (first_name, last_name, email, phone, address, identification_number)
+      VALUES (?, ?, ?, ?, ?, ?)`,
+      [
+        first_name,
+        last_name,
+        email,
+        phone,
+        address,
+        identification_number,
+      ],
+    );
+
+    return {
+      guests_id: result.insertId,
       first_name,
       last_name,
       email,
       phone,
       address,
       identification_number,
-    ],
-  );
+    };
+  }
 
-  return {
-    guests_id: result.insertId,
-    first_name,
-    last_name,
-    email,
-    phone,
-    address,
-    identification_number,
-  };
-}
   async findById(id: number) {
     const [rows] = await this.pool().execute<RowDataPacket[]>(
       `SELECT
@@ -84,7 +86,7 @@ export class GuestsService {
       first_name?: string;
       last_name?: string;
       email?: string;
-      phone?: number;
+      phone?: string;
       address?: string;
       identification_number?: string;
     },
@@ -139,7 +141,7 @@ export class GuestsService {
     return this.findById(id);
   }
 
-  async deleteGuest(id: string) {
+  async deleteGuest(id: number) {
     const [result] = await this.pool().execute<OkPacket>(
       'DELETE FROM guests WHERE guests_id = ?',
       [id],
